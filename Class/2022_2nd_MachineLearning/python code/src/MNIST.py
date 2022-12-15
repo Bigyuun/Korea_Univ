@@ -7,7 +7,7 @@ import pandas as pd
 mnist = tf.keras.datasets.mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-handwrite_data = np.loadtxt('../docs/HandwriteNumber/csv/data_total_grayscale_C2.csv', delimiter=',')
+handwrite_data = np.loadtxt('../docs/HandwriteNumber/csv/data_total_grayscale_C2.csv', delimitemnistr=',')
 print("handwrite data is opened")
 x_handwrite_data = handwrite_data[:, 1:].reshape(10,28,28)
 y_handwrite_data = handwrite_data[:, 0]
