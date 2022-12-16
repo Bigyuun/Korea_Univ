@@ -25,3 +25,4 @@ model = LinearSVC(random_state=42)
 model.fit(x_train, y_train)
 
 pr = model.predict(x_handwrite_data)
+print(pr)

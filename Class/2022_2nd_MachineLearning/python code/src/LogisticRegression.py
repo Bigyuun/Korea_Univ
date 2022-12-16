@@ -1,9 +1,14 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from tqdm import tqdm
 import pandas as pd
+import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import precision_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
 
 # Global macro
 G_USE_DATA_FROM_CSV = 0
@@ -19,6 +24,7 @@ def loss_function(predict, y):  # cross-entropy method
 """
 data set from .csv
 """
+feature = ('FG%','FT%','3PM','PTS','TREB','AST','STL','BLK','TO')
 if G_USE_DATA_FROM_CSV:
     data = pd.read_csv('../docs/NBA Rookie DRAFT Rank.csv')
     print(data.head())
@@ -78,7 +84,7 @@ else:
                   [0.000, 0.500, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
                   ])
     target = np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]).T.reshape(-1,1)
-    train_input, test_input, train_target, test_target = train_test_split(input, target, test_size=0.4, random_state=42)
+    train_input, test_input, train_target, test_target = train_test_split(input, target, test_size=0.5, random_state=42)
     print("manual data is used\n")
 
 # Using iteration method
@@ -98,7 +104,7 @@ for i in tqdm(range(0,iteration)):
 
     # get dL/dW & dL/db
     dLdsig = -1 * ( train_target/predict - (1-train_target)/(1-predict) )    #dLoss()/dsigmoid()
-    dsigdy = predict * (1-predict)                                  #dsigmoid()/dy
+    dsigdy = predict * (1-predict)                                           #dsigmoid()/dy
     dLdW = np.dot(train_input.T, dLdsig*dsigdy)
     dLdb = np.sum(dLdsig * dsigdy)
 
@@ -107,17 +113,84 @@ for i in tqdm(range(0,iteration)):
     b = b - learning_rate * dLdb
 
 # Using sklearn Class
-lr = LogisticRegression(C=1, max_iter=1000)
+lr = LogisticRegression(C=1, max_iter=iteration)
 lr.fit(train_input, train_target)
+pred_lr = lr.predict(test_input)
+pred_proba = lr.predict_proba(test_input)
+precision = precision_score(test_target, pred_lr)
+conf_matrix = confusion_matrix(test_target, pred_lr)
+class_report = classification_report(test_target, pred_lr)
 
 
-print('Weight(w) : iteration) ', W.T)
-print('              sklearn) ', lr.coef_)
-print('Bais(b)   : iteration) ', b[0])
-print('              sklearn) ', lr.intercept_)
+print(feature)
+print('Weight(w) - iteration : ', W.T)
+print("          - sklearn   : ", lr.coef_[0])
+print('Bais(b)   - iteration : ', b[0][0])
+print('          - sklearn   : ', lr.intercept_[0])
 print('Score (train data set) : ', lr.score(train_input, train_target))
 print('Score (test data set) : ', lr.score(test_input, test_target))
+#
+# print('Weight(w) : iteration) ', W.T)
+# print('              sklearn) ', lr.coef_)
+# print('Bais(b)   : iteration) ', b[0])
+# print('              sklearn) ', lr.intercept_)
+# print('Score (train data set) : ', lr.score(train_input, train_target))
+# print('Score (test data set) : ', lr.score(test_input, test_target))
 print('learning finish')
+
+xn = np.arange(0, 17, 0.01)
+yn = np.exp(-xn-b[0])/(1+np.exp(-xn-b[0]))
+
+# plt.plot(xn,yn)
+
+y = np.dot(input, lr.coef_.T)
+# print(y)
+columns, rows = input.shape
+k= input[:,0]
+c = np.arange(0,columns,1)
+
+plt.figure("NBA Rookie Draft Ranking")
+plt.subplot(1,4,1)
+plt.title("Data set for each feature")
+for i in range(0,rows):
+    # plt.scatter(c, input[:,i], label=feature[i])
+    plt.plot(c, input[:, i], label=feature[i])
+plt.legend()
+
+plt.subplot(1,4,2)
+plt.title("Data set for each feature (Detail)")
+plt.ylim(0, 2)
+for i in range(0,rows):
+    # plt.scatter(c, input[:,i], label=feature[i])
+    plt.plot(c, input[:, i], label=feature[i])
+plt.legend()
+
+plt.subplot(1,4,3)
+plt.title("Logic Values")
+plt.scatter(y, target, marker="o")
+plt.xlabel('entropy')
+plt.ylabel('Sigmoid')
+
+plt.subplot(1,4,4)
+plt.title("Logisitc Regression")
+plt.scatter(y, target, marker="o")
+plt.scatter(y, 1/(1+np.exp(-y-lr.intercept_)), marker= 's')
+plt.plot(xn, 1/(1+np.exp(-xn-lr.intercept_)), '-r')
+# plt.plot(xn,yn)
+
+# sample_data = np.array([[0.3, 0.7, 0.8, 2.7, 1.2, 0.3, 0.4, 0.1, 0.8]])
+sample_data = np.array([[0.460, 1.000, 1.4, 7.8, 2.6, 3.7, 0.9, 0.2, 1.2]])
+
+predict_sample = np.dot(sample_data, W.ravel())
+# print( np.exp(predict_sample+b[0])/(1+np.exp(predict_sample+b[0])))
+# print(1/(1+np.exp(-predict_sample-b[0])))
+# print(lr.predict(sample_data))
+
+
+
+plt.show()
+print("process finished")
+
 
 
 
