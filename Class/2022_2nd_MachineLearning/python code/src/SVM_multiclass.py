@@ -38,7 +38,7 @@ svm.fit(X_train_std, y_train)
 pred = svm.predict(X_test_std)
 print("pred = ", pred)
 
-svm_model = SVC(kernel='rbf', C=8, gamma=0.1)
+svm_model = SVC(kernel='rbf', C=8, gamma=0.1, probability=True)
 svm_model.fit(X_train_std, y_train)  # SVM 분류 모델 훈련
 
 scores = cross_val_score(svm_model, iris_dataset['data'], iris_dataset['target'], cv=5 )

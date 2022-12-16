@@ -31,7 +31,7 @@ else:
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 # 5. 모델 훈련
-    history = model.fit(x_train, y_train, epochs=10)
+    history = model.fit(x_train, y_train, epochs=10, verbose=1)
 
 # 6. 정확도 평가
 train_loss, train_acc = model.evaluate(x_train, y_train, verbose=0)
