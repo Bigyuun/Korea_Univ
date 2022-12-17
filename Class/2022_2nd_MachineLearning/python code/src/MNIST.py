@@ -52,6 +52,7 @@ print("예측된 숫자 : ", pr)
 history_loss = history.history['loss']
 history_acc = history.history['accuracy']
 
+
 # -------------------- graph ---------------------------------
 plt.subplot(1,2,1)
 plt.title("Loss of model")
