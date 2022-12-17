@@ -37,13 +37,12 @@ pred_ABC_400 = model_ABC_400.predict(input_test)
 
 
 score = cross_val_score(model_ABC, input_test, target_test, cv=5)
+print("<score>")
 print(score.mean())
-print(score.std())
+# print(score.std())
 
 # imp = model_ABC.feature_importances_
 class_ABC = model_ABC.get_params()
-#
-# print(imp)
 print(class_ABC)
 
 # target과 predict 값을 연산비교하여 일치하지 않는 개수가 얼마나 되는지 확인
@@ -56,17 +55,22 @@ rate_of_fail_pred_ABC = fail_pred_ABC.sum() / len(fail_pred_ABC)
 rate_of_fail_pred_ABC_100 = fail_pred_ABC_100.sum() / len(fail_pred_ABC_100) * 100
 rate_of_fail_pred_ABC_200 = fail_pred_ABC_200.sum() / len(fail_pred_ABC_200) * 100
 rate_of_fail_pred_ABC_400 = fail_pred_ABC_400.sum() / len(fail_pred_ABC_400) * 100
-print("------------- rate of fail matches ----------------")
-print(rate_of_fail_pred_ABC)
-print(rate_of_fail_pred_ABC_100)
-print(rate_of_fail_pred_ABC_200)
-print(rate_of_fail_pred_ABC_400)
 
+print("------------------------")
+print("ㅣ Ada boost SVM Result ㅣ")
+print("------------------------")
+print("<<<rate of fail matches>>>")
 print("target = ", target_test)
-# print("pred = ", pred_ABC)
-print("accuracy = ", metrics.accuracy_score(target_test, pred_ABC))
-print("accuracy = ", metrics.accuracy_score(target_test, pred_ABC_100))
-print("accuracy = ", metrics.accuracy_score(target_test, pred_ABC_200))
-print("accuracy = ", metrics.accuracy_score(target_test, pred_ABC_400))
+print("number of estimater")
+print("         1 : ", rate_of_fail_pred_ABC)
+print("        10 : ", rate_of_fail_pred_ABC_100)
+print("        20 : ", rate_of_fail_pred_ABC_200)
+print("        40 : ", rate_of_fail_pred_ABC_400)
+
+print("<<<Accuracy>>>")
+print("         1  : ", metrics.accuracy_score(target_test, pred_ABC))
+print("        10  : ", metrics.accuracy_score(target_test, pred_ABC_100))
+print("        20  : ", metrics.accuracy_score(target_test, pred_ABC_200))
+print("        40  : ", metrics.accuracy_score(target_test, pred_ABC_400))
 
 print('process finished')
