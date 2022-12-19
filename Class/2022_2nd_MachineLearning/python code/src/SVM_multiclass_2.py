@@ -44,12 +44,14 @@ print(cv_scores.std())
 
 # 4. 결과 확인
 pred_svm_ln = clf_svm_ln.predict(X_te_std)
+print("----predict----")
 print(pred_svm_ln)
 pred_svm_sg = clf_svm_sg.predict(X_te_std)
 print(pred_svm_sg)
 pred_svm_rbf = clf_svm_rbf.predict(X_te_std)
 print(pred_svm_rbf)
 
+print("----acc----")
 accuracy_ln = accuracy_score(y_te, pred_svm_ln)
 print(accuracy_ln)
 accuracy_sg = accuracy_score(y_te, pred_svm_sg)
@@ -57,6 +59,7 @@ print(accuracy_sg)
 accuracy_rbf = accuracy_score(y_te, pred_svm_rbf)
 print(accuracy_rbf)
 
+print("----matrix----")
 conf_matrix_ln = confusion_matrix(y_te, pred_svm_ln)
 print(conf_matrix_ln)
 conf_matrix_sg = confusion_matrix(y_te, pred_svm_sg)

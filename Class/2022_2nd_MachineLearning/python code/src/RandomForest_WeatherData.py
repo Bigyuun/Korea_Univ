@@ -36,8 +36,13 @@ imp = model.feature_importances_
 indices = np.argsort(imp)
 print(model.score(input_train, target_train))
 print(model.score(input_test, target_test))
+print("--------- importance (impurity) ----------")
+print(feature)
+print(imp)
+
 
 # -------------------- graph ---------------------------------
+indices = np.argsort(imp)
 plt.title('Feature Importances')
 plt.barh(range(len(indices)), imp[indices], color='g', align='center')
 plt.yticks(range(len(indices)), [feature[i] for i in indices])
